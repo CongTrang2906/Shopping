@@ -1,0 +1,38 @@
+[
+  {
+    "id": 2,
+    "firstName": "PHUC",
+    "lastName": "TRUONG",
+    "email": "congtrang2906@gmail.com",
+    "phoneNumber": "0329200254",
+    "address": "Da Nang",
+    "birthday": "2000/06/29"
+  },
+  {
+    "id": 3,
+    "firstName": "NGUYEN",
+    "lastName": "TRUONG",
+    "email": "congtrang2906@gmail.com",
+    "phoneNumber": "0329200254",
+    "address": "Da Nang",
+    "birthday": "2000/06/29"
+  },
+  {
+    "id": 4,
+    "firstName": "BAO",
+    "lastName": "TRUONG",
+    "email": "congtrang2906@gmail.com",
+    "phoneNumber": "0329200254",
+    "address": "Da Nang",
+    "birthday": "2000/06/29"
+  },
+  {
+    "id": 5,
+    "firstName": "QUYEN",
+    "lastName": "TRUONG",
+    "email": "congtrang2906@gmail.com",
+    "phoneNumber": "0329200254",
+    "address": "Da Nang",
+    "birthday": "2000/06/29"
+  }
+]
