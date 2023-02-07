@@ -3,8 +3,15 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-
 const cors = require("cors");
+//jwt
+const passport = require("passport");
+
+var BasicStrategy = require("passport-http").BasicStrategy;
+
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
+const jwtSettings = require("./constants/jwtSettings");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -15,6 +22,7 @@ var employeesRouter = require("./routes/employees");
 var ordersRouter = require("./routes/orders");
 var suppliersRouter = require("./routes/suppliers");
 
+var authRouter = require("./routes/auth");
 var app = express();
 
 // view engine setup
@@ -33,6 +41,50 @@ app.use(
     origin: "*",
   })
 );
+const myLogger = function (req, res, next) {
+  console.log("LOGGED");
+  next();
+};
+
+app.use(myLogger);
+// Passport: Basic Auth
+passport.use(
+  new BasicStrategy(function (username, password, done) {
+    console.log("🚀 BasicStrategy");
+    // MONGODB
+    findDocuments(
+      { query: { username: username, password: password } },
+      "login"
+    )
+      .then((result) => {
+        if (result.length > 0) {
+          return done(null, true);
+        } else {
+          return done(null, false);
+        }
+      })
+      .catch((err) => {
+        return done(err, false);
+      });
+  })
+);
+
+//JwT
+// Passport: jwt
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = jwtSettings.SECRET;
+opts.audience = jwtSettings.AUDIENCE;
+opts.issuer = jwtSettings.ISSUER;
+
+passport.use(
+  new JwtStrategy(opts, function (payload, done) {
+    console.log("payload", payload);
+    let error = null;
+    let user = true;
+    return done(error, user);
+  })
+);
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -42,6 +94,7 @@ app.use("/categories", categoriesRouter);
 app.use("/employees", employeesRouter);
 app.use("/orders", ordersRouter);
 app.use("/suppliers", suppliersRouter);
+app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

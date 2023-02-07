@@ -30,7 +30,7 @@ const productSchema = Schema(
   }
 );
 
-// Virtuals
+// Virtuals :dùng để tính toán những cái logic
 productSchema.virtual("total").get(function () {
   return (this.price * (100 - this.discount)) / 100;
 });

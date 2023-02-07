@@ -158,7 +158,8 @@ export default function ProductPage() {
       //console.log(response.data);
     });
   }, []);
-
+  //Lấy dữ liệu từ thằng backend để hiển thị lên
+  //Call API từ thằng backend
   React.useEffect(() => {
     axios.get("http://localhost:9000/products").then((response) => {
       setproducts(response.data);

@@ -31,7 +31,9 @@ const productSchema = Schema(
 );
 
 // Virtuals
+// Gía sau cùng
 productSchema.virtual("total").get(function () {
+  //đơn giá * tỷ lệ giảm giá /100%
   return (this.price * (100 - this.discount)) / 100;
 });
 

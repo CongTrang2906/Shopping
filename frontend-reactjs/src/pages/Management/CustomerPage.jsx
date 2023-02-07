@@ -105,6 +105,7 @@ export default function CustomerPage() {
     axios.post("http://localhost:9000/customers", values).then((response) => {
       if (response.status === 201) {
         createForm.resetFields();
+        //giá trị cũ cộng thêm cho 1
         setRefresh((f) => f + 1);
       }
       console.log(response.data);

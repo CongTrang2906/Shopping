@@ -1,13 +1,17 @@
+//Customer này sẽ làm với database-mongodb
+
+const { CONNECTION_STRING } = require("../constants/dbSettings");
 const { default: mongoose } = require("mongoose");
 
 const { Customer } = require("../models");
 // MONGOOSE
-mongoose.connect("mongodb://127.0.0.1:27017/Test");
+mongoose.set("strictQuery", false);
+mongoose.connect(CONNECTION_STRING);
 
 var express = require("express");
 var router = express.Router();
 
-// GET
+//============================== GET==================================
 router.get("/", function (req, res, next) {
   try {
     Customer.find()
@@ -22,7 +26,7 @@ router.get("/", function (req, res, next) {
   }
 });
 
-// GET:id
+// ====================================GET:id====================================
 router.get("/:id", function (req, res, next) {
   try {
     const { id } = req.params;
@@ -38,7 +42,7 @@ router.get("/:id", function (req, res, next) {
   }
 });
 
-// POST
+// ===============================POST======================================
 router.post("/", function (req, res, next) {
   try {
     const data = req.body;
@@ -58,7 +62,7 @@ router.post("/", function (req, res, next) {
   }
 });
 
-// PATCH/:id
+// ================================PATCH/:id==================================
 router.patch("/:id", function (req, res, next) {
   try {
     const { id } = req.params;
@@ -78,11 +82,94 @@ router.patch("/:id", function (req, res, next) {
   }
 });
 
-// DELETE
+//==================================DELETE===============================
 router.delete("/:id", function (req, res, next) {
   try {
     const { id } = req.params;
     Customer.findByIdAndDelete(id)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
+// ------------------------------------------------------------------------------------------------
+// QUESTIONS 4
+// ------------------------------------------------------------------------------------------------
+// https://www.mongodb.com/docs/manual/reference/operator/query/
+//Hiển thị tất cả khách hàng có địa chỉ ở quận hải châu
+router.get("/questions/4", function (req, res, next) {
+  try {
+    const text = "Hải Châu";
+    //so sánh : adress có chứa text
+    const query = { address: new RegExp(`${text}`) };
+    // address có chứa từ Hải Châu
+
+    Customer.find(query)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+// ------------------------------------------------------------------------------------------------
+// QUESTIONS 5
+// ------------------------------------------------------------------------------------------------
+// https://www.mongodb.com/docs/v6.0/reference/operator/aggregation/year/
+//Hiển thị tất cả khách hàng có năm sinh 1990
+router.get("/questions/5", function (req, res, next) {
+  try {
+    const query = {
+      $expr: {
+        $eq: [{ $year: "$birthday" }, 1990],
+      },
+    };
+
+    Customer.find(query)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
+// ------------------------------------------------------------------------------------------------
+// QUESTIONS 6
+// ------------------------------------------------------------------------------------------------
+// https://www.mongodb.com/docs/v6.0/reference/operator/aggregation/month/
+// https://www.mongodb.com/docs/v6.0/reference/operator/aggregation/dayOfMonth/
+// https://www.mongodb.com/docs/manual/reference/operator/query/
+// Hiển thị tất cả khác hàng có ngày sinh nhật hôm nay
+router.get("/questions/6", function (req, res, next) {
+  try {
+    const today = new Date();
+    const eqDay = {
+      $eq: [{ $dayOfMonth: "$birthday" }, { $dayOfMonth: today }],
+    };
+    const eqMonth = { $eq: [{ $month: "$birthday" }, { $month: today }] };
+
+    const query = {
+      $expr: {
+        //logic : thằng này day đúng và thằng month đúng
+        //trong ngày hôm này là phải dùng and
+        $and: [eqDay, eqMonth],
+      },
+    };
+
+    Customer.find(query)
       .then((result) => {
         res.send(result);
       })
