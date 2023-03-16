@@ -1,10 +1,11 @@
 "use strict";
+const { CONNECTION_STRING, DATABASE_NAME } = require("../constants/dbSettings");
 // Khai báo thư viện MongoClient
 const { MongoClient, ObjectId } = require("mongodb");
 
 // Chuỗi kết nối đến MongoDB
-const DATABASE_NAME = "Test";
-const CONNECTION_STRING = "mongodb://127.0.0.1:27017/" + DATABASE_NAME;
+// const DATABASE_NAME = "Test";
+// const CONNECTION_STRING = "mongodb://localhost:27017/" + DATABASE_NAME;
 
 // INSERT: Thêm mới (một)
 function insertDocument(data, collectionName) {

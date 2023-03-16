@@ -21,9 +21,12 @@ var categoriesRouter = require("./routes/categories");
 var employeesRouter = require("./routes/employees");
 var ordersRouter = require("./routes/orders");
 var suppliersRouter = require("./routes/suppliers");
-
 var authRouter = require("./routes/auth");
+
 var uploadRouter = require("./routes/upload");
+
+const { findDocuments } = require("./helpers/MongoDbHelper");
+
 var app = express();
 
 // view engine setup
